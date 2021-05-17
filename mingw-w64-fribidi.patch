@@ -1,8 +1,16 @@
 diff --git a/mingw-w64-fribidi/PKGBUILD b/mingw-w64-fribidi/PKGBUILD
-index 526b79214..484377bb1 100644
+index 526b79214..eccd6bcdd 100644
 --- a/mingw-w64-fribidi/PKGBUILD
 +++ b/mingw-w64-fribidi/PKGBUILD
-@@ -32,35 +32,11 @@ build() {
+@@ -23,6 +23,7 @@ build() {
+   cd build-${MINGW_CHOST}-static
+ 
+   MSYS2_ARG_CONV_EXCL="--prefix=" \
++  CPPFLAGS="-DFRIBIDI_LIB_STATIC" \
+   meson \
+       --prefix=${MINGW_PREFIX} \
+       --buildtype plain \
+@@ -32,35 +33,11 @@ build() {
        ../${_realname}-${pkgver}
  
    ninja
