@@ -1,0 +1,40 @@
+diff --git a/mingw-w64-fribidi/PKGBUILD b/mingw-w64-fribidi/PKGBUILD
+index 526b79214..484377bb1 100644
+--- a/mingw-w64-fribidi/PKGBUILD
++++ b/mingw-w64-fribidi/PKGBUILD
+@@ -32,35 +32,11 @@ build() {
+       ../${_realname}-${pkgver}
+ 
+   ninja
+-
+-  cd ..
+-  mkdir -p build-${MINGW_CHOST}-shared
+-  cd build-${MINGW_CHOST}-shared
+-
+-  MSYS2_ARG_CONV_EXCL="--prefix=" \
+-  meson \
+-      --prefix=${MINGW_PREFIX} \
+-      --buildtype plain \
+-      --prefix=${MINGW_PREFIX} \
+-       -Ddocs=false \
+-       --default-library shared \
+-      ../${_realname}-${pkgver}
+-
+-  ninja
+-}
+-
+-check() {
+-  cd build-${MINGW_CHOST}-shared
+-
+-  meson test
+ }
+ 
+ package() {
+   cd ${srcdir}/build-${MINGW_CHOST}-static
+   DESTDIR="${pkgdir}" ninja install
+ 
+-  cd ${srcdir}/build-${MINGW_CHOST}-shared
+-  DESTDIR="${pkgdir}" ninja install
+-
+   install -Dm644 "${srcdir}/${_realname}-${pkgver}/COPYING" "${pkgdir}${MINGW_PREFIX}/share/licenses/${_realname}/COPYING"
+ }
