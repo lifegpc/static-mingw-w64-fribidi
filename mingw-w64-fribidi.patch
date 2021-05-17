@@ -1,8 +1,8 @@
 diff --git a/mingw-w64-fribidi/PKGBUILD b/mingw-w64-fribidi/PKGBUILD
-index 526b79214..59e1b9624 100644
+index 526b79214..acd4f9c73 100644
 --- a/mingw-w64-fribidi/PKGBUILD
 +++ b/mingw-w64-fribidi/PKGBUILD
-@@ -12,55 +12,32 @@ license=('LGPL')
+@@ -12,55 +12,35 @@ license=('LGPL')
  url="https://github.com/fribidi/fribidi/"
  depends=()
  options=('strip' '!libtool' 'staticlibs')
@@ -43,7 +43,7 @@ index 526b79214..59e1b9624 100644
 -
 -  ninja
 +prepare() {
-+  cd "${srcdir}/${_realname}-${_pkgver}"
++  cd "${srcdir}/${_realname}-${pkgver}"
 +  WANT_AUTOMAKE=latest autoreconf -fiv -I m4
  }
  
@@ -54,7 +54,7 @@ index 526b79214..59e1b9624 100644
 +  mkdir -p "${srcdir}/build-${MINGW_CHOST}" && cd "${srcdir}/build-${MINGW_CHOST}"
  
 -  meson test
-+  ../${_realname}-${_pkgver}/configure \
++  ../${_realname}-${pkgver}/configure \
 +    --prefix=${MINGW_PREFIX} \
 +    --build=${MINGW_CHOST} \
 +    --host=${MINGW_CHOST} \
@@ -73,5 +73,8 @@ index 526b79214..59e1b9624 100644
 +  cd ${srcdir}/build-${MINGW_CHOST}
 +  make DESTDIR="${pkgdir}" install
  
++  find "${pkgdir}${MINGW_PREFIX}" -name '*.def' -o -name '*.exp' | xargs -rtl1 rm
++  local PREFIX_DEPS=$(cygpath -am ${MINGW_PREFIX})
++  find ${pkgdir}${MINGW_PREFIX}/lib/pkgconfig -name *.pc -exec sed -i -e"s|${PREFIX_DEPS}|${MINGW_PREFIX}|g" {} \;
    install -Dm644 "${srcdir}/${_realname}-${pkgver}/COPYING" "${pkgdir}${MINGW_PREFIX}/share/licenses/${_realname}/COPYING"
  }
