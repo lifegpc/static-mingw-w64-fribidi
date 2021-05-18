@@ -1,8 +1,8 @@
 diff --git a/mingw-w64-fribidi/PKGBUILD b/mingw-w64-fribidi/PKGBUILD
-index 526b79214..ed4bd416f 100644
+index 526b79214..d4d75c2c1 100644
 --- a/mingw-w64-fribidi/PKGBUILD
 +++ b/mingw-w64-fribidi/PKGBUILD
-@@ -12,55 +12,40 @@ license=('LGPL')
+@@ -12,55 +12,39 @@ license=('LGPL')
  url="https://github.com/fribidi/fribidi/"
  depends=()
  options=('strip' '!libtool' 'staticlibs')
@@ -26,28 +26,33 @@ index 526b79214..ed4bd416f 100644
  build() {
 -  mkdir -p build-${MINGW_CHOST}-static
 -  cd build-${MINGW_CHOST}-static
--
--  MSYS2_ARG_CONV_EXCL="--prefix=" \
--  meson \
--      --prefix=${MINGW_PREFIX} \
--      --buildtype plain \
--      --prefix=${MINGW_PREFIX} \
--       -Ddocs=false \
--       --default-library static \
--      ../${_realname}-${pkgver}
--
--  ninja
--
--  cd ..
--  mkdir -p build-${MINGW_CHOST}-shared
--  cd build-${MINGW_CHOST}-shared
 +  [[ -d "${srcdir}/build-${MINGW_CHOST}" ]] && rm -rf "${srcdir}/build-${MINGW_CHOST}"
 +  mkdir -p "${srcdir}/build-${MINGW_CHOST}" && cd "${srcdir}/build-${MINGW_CHOST}"
  
 -  MSYS2_ARG_CONV_EXCL="--prefix=" \
 -  meson \
+-      --prefix=${MINGW_PREFIX} \
+-      --buildtype plain \
 +  ../${_realname}-${pkgver}/configure \
        --prefix=${MINGW_PREFIX} \
+-       -Ddocs=false \
+-       --default-library static \
+-      ../${_realname}-${pkgver}
+-
+-  ninja
++    --build=${MINGW_CHOST} \
++    --host=${MINGW_CHOST} \
++    --target=${MINGW_CHOST} \
++    --enable-shared=no \
++    --enable-static=yes
+ 
+-  cd ..
+-  mkdir -p build-${MINGW_CHOST}-shared
+-  cd build-${MINGW_CHOST}-shared
+-
+-  MSYS2_ARG_CONV_EXCL="--prefix=" \
+-  meson \
+-      --prefix=${MINGW_PREFIX} \
 -      --buildtype plain \
 -      --prefix=${MINGW_PREFIX} \
 -       -Ddocs=false \
@@ -61,13 +66,6 @@ index 526b79214..ed4bd416f 100644
 -  cd build-${MINGW_CHOST}-shared
 -
 -  meson test
-+    --build=${MINGW_CHOST} \
-+    --host=${MINGW_CHOST} \
-+    --target=${MINGW_CHOST} \
-+    --enable-shared=no \
-+    --enable-static=yes \
-+    --disable-doc
-+
 +  make
  }
  
