@@ -1,8 +1,8 @@
 diff --git a/mingw-w64-fribidi/PKGBUILD b/mingw-w64-fribidi/PKGBUILD
-index 526b79214..8503e4d88 100644
+index 526b79214..ed4bd416f 100644
 --- a/mingw-w64-fribidi/PKGBUILD
 +++ b/mingw-w64-fribidi/PKGBUILD
-@@ -12,55 +12,38 @@ license=('LGPL')
+@@ -12,55 +12,40 @@ license=('LGPL')
  url="https://github.com/fribidi/fribidi/"
  depends=()
  options=('strip' '!libtool' 'staticlibs')
@@ -47,7 +47,7 @@ index 526b79214..8503e4d88 100644
 -  MSYS2_ARG_CONV_EXCL="--prefix=" \
 -  meson \
 +  ../${_realname}-${pkgver}/configure \
-     --prefix=${MINGW_PREFIX} \
+       --prefix=${MINGW_PREFIX} \
 -      --buildtype plain \
 -      --prefix=${MINGW_PREFIX} \
 -       -Ddocs=false \
@@ -67,6 +67,8 @@ index 526b79214..8503e4d88 100644
 +    --enable-shared=no \
 +    --enable-static=yes \
 +    --disable-doc
++
++  make
  }
  
  package() {
