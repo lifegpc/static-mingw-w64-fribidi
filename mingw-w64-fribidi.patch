@@ -1,19 +1,29 @@
 diff --git a/mingw-w64-fribidi/PKGBUILD b/mingw-w64-fribidi/PKGBUILD
-index 526b79214..acd4f9c73 100644
+index 526b79214..8503e4d88 100644
 --- a/mingw-w64-fribidi/PKGBUILD
 +++ b/mingw-w64-fribidi/PKGBUILD
-@@ -12,55 +12,35 @@ license=('LGPL')
+@@ -12,55 +12,38 @@ license=('LGPL')
  url="https://github.com/fribidi/fribidi/"
  depends=()
  options=('strip' '!libtool' 'staticlibs')
 -makedepends=("${MINGW_PACKAGE_PREFIX}-gcc"
 -             "${MINGW_PACKAGE_PREFIX}-meson"
 -             "${MINGW_PACKAGE_PREFIX}-ninja")
+-source=(${_realname}-${pkgver}.tar.gz::"https://github.com/fribidi/fribidi/archive/v${pkgver}.tar.gz")
+-sha256sums=('3ebb19c4184ed6dc324d2e291d7465bc6108a20be019f053f33228e07e879c4f')
 +makedepends=("${MINGW_PACKAGE_PREFIX}-gcc")
- source=(${_realname}-${pkgver}.tar.gz::"https://github.com/fribidi/fribidi/archive/v${pkgver}.tar.gz")
- sha256sums=('3ebb19c4184ed6dc324d2e291d7465bc6108a20be019f053f33228e07e879c4f')
++source=(${_realname}-${pkgver}.tar.gz::"https://github.com/fribidi/fribidi/archive/v${pkgver}.tar.gz"
++        "0001-disable-build-doc.patch")
++sha256sums=('3ebb19c4184ed6dc324d2e291d7465bc6108a20be019f053f33228e07e879c4f'
++            'c50855ea302951dc0564aca95f0e7cf59d1f8ebfaf8ff833a723548615341a02')
++
++prepare() {
++  cd "${srcdir}/${_realname}-${pkgver}"
++  patch -p1 -i ${srcdir}/0001-disable-build-doc.patch
++  WANT_AUTOMAKE=latest autoreconf -fiv -I m4
++}
  
--build() {
+ build() {
 -  mkdir -p build-${MINGW_CHOST}-static
 -  cd build-${MINGW_CHOST}-static
 -
@@ -31,10 +41,13 @@ index 526b79214..acd4f9c73 100644
 -  cd ..
 -  mkdir -p build-${MINGW_CHOST}-shared
 -  cd build-${MINGW_CHOST}-shared
--
++  [[ -d "${srcdir}/build-${MINGW_CHOST}" ]] && rm -rf "${srcdir}/build-${MINGW_CHOST}"
++  mkdir -p "${srcdir}/build-${MINGW_CHOST}" && cd "${srcdir}/build-${MINGW_CHOST}"
+ 
 -  MSYS2_ARG_CONV_EXCL="--prefix=" \
 -  meson \
--      --prefix=${MINGW_PREFIX} \
++  ../${_realname}-${pkgver}/configure \
+     --prefix=${MINGW_PREFIX} \
 -      --buildtype plain \
 -      --prefix=${MINGW_PREFIX} \
 -       -Ddocs=false \
@@ -42,20 +55,12 @@ index 526b79214..acd4f9c73 100644
 -      ../${_realname}-${pkgver}
 -
 -  ninja
-+prepare() {
-+  cd "${srcdir}/${_realname}-${pkgver}"
-+  WANT_AUTOMAKE=latest autoreconf -fiv -I m4
- }
- 
+-}
+-
 -check() {
 -  cd build-${MINGW_CHOST}-shared
-+build() {
-+  [[ -d "${srcdir}/build-${MINGW_CHOST}" ]] && rm -rf "${srcdir}/build-${MINGW_CHOST}"
-+  mkdir -p "${srcdir}/build-${MINGW_CHOST}" && cd "${srcdir}/build-${MINGW_CHOST}"
- 
+-
 -  meson test
-+  ../${_realname}-${pkgver}/configure \
-+    --prefix=${MINGW_PREFIX} \
 +    --build=${MINGW_CHOST} \
 +    --host=${MINGW_CHOST} \
 +    --target=${MINGW_CHOST} \
