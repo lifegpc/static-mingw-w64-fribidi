@@ -1,8 +1,8 @@
 diff --git a/mingw-w64-fribidi/PKGBUILD b/mingw-w64-fribidi/PKGBUILD
-index 526b79214..d4d75c2c1 100644
+index 526b79214..2ab4c484e 100644
 --- a/mingw-w64-fribidi/PKGBUILD
 +++ b/mingw-w64-fribidi/PKGBUILD
-@@ -12,55 +12,39 @@ license=('LGPL')
+@@ -12,55 +12,42 @@ license=('LGPL')
  url="https://github.com/fribidi/fribidi/"
  depends=()
  options=('strip' '!libtool' 'staticlibs')
@@ -13,13 +13,16 @@ index 526b79214..d4d75c2c1 100644
 -sha256sums=('3ebb19c4184ed6dc324d2e291d7465bc6108a20be019f053f33228e07e879c4f')
 +makedepends=("${MINGW_PACKAGE_PREFIX}-gcc")
 +source=(${_realname}-${pkgver}.tar.gz::"https://github.com/fribidi/fribidi/archive/v${pkgver}.tar.gz"
-+        "0001-disable-build-doc.patch")
++        "0001-disable-build-doc.patch"
++        "0002-Fix-issue-156-in-fribidi.patch")
 +sha256sums=('3ebb19c4184ed6dc324d2e291d7465bc6108a20be019f053f33228e07e879c4f'
-+            'c50855ea302951dc0564aca95f0e7cf59d1f8ebfaf8ff833a723548615341a02')
++            'c50855ea302951dc0564aca95f0e7cf59d1f8ebfaf8ff833a723548615341a02'
++            '388d94129d316ae2f7e712b0235a88aeac6317596e3a2c94c9579070d8c0e143')
 +
 +prepare() {
 +  cd "${srcdir}/${_realname}-${pkgver}"
 +  patch -p1 -i ${srcdir}/0001-disable-build-doc.patch
++  patch -p1 -i ${srcdir}/0002-Fix-issue-156-in-fribidi.patch
 +  WANT_AUTOMAKE=latest autoreconf -fiv -I m4
 +}
  

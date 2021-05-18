@@ -1,0 +1,9 @@
+--- fribidi-1.0.10.orig/fribidi.pc.in	2021-05-18 14:25:59 +0000
++++ fribidi-1.0.10/fribidi.pc.in	2021-05-18 14:56:05 +0000
+@@ -9,5 +9,4 @@
+ Description: Unicode Bidirectional Algorithm Library
+ Version: @VERSION@
+ Libs: -L${libdir} -lfribidi
+-Cflags: -I${includedir}/@PACKAGE@
+-CFLAGS.private: -DFRIBIDI_LIB_STATIC
++Cflags: -I${includedir}/@PACKAGE@ -DFRIBIDI_LIB_STATIC
